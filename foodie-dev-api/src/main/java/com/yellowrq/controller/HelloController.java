@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Package:com.yellowrq.controller
  * Description:
  *
- * @author:huangruiqi
+ * @author:yellowrq
  * @date: 2020/1/13 14:54
  */
 @RestController
