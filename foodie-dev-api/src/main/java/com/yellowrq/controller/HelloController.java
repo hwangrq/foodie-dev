@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author:yellowrq
  * @date: 2020/1/13 14:54
  */
+@ApiIgnore
 @RestController
 public class HelloController {
 

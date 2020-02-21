@@ -7,6 +7,7 @@ import com.yellowrq.pojo.Users;
 import com.yellowrq.service.UserService;
 import com.yellowrq.utils.DateUtil;
 import com.yellowrq.utils.MD5Util;
+import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -30,6 +31,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UsersMapper usersMapper;
 
+    @Autowired
+    private Sid sid;
+
+    //头像图片
     private static final String USER_FACE = "http://122.152.205.72:88/group1/M00/00/05/CpoxxFw_8_qAIlFXAAAcIhVPdSg994.png";
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -45,6 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Users createUser(UserBO userBO) {
         Users user = new Users();
+        user.setId(sid.nextShort());
         user.setUsername(userBO.getUsername());
         try {
             user.setPassword(MD5Util.getMD5Str(userBO.getPassword()));
@@ -61,6 +67,8 @@ public class UserServiceImpl implements UserService {
         user.setSex(Sex.secret.type);
         user.setCreatedTime(new Date());
         user.setUpdatedTime(new Date());
-        return null;
+        //保存用户
+        usersMapper.insert(user);
+        return user;
     }
 }
