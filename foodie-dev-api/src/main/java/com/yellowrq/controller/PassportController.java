@@ -133,7 +133,7 @@ public class PassportController {
                              HttpServletResponse response){
         //清楚用户相关信息的cookie
         CookieUtils.deleteCookie(request, response, "user");
-        // 用户退出登录 需要清楚购物车
+        // 用户退出登录 需要清除购物车
         // 分布式会话中需要清除用户数据
         return JSONResult.ok();
     }
