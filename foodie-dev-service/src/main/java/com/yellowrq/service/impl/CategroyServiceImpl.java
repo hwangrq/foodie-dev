@@ -4,6 +4,7 @@ import com.yellowrq.mapper.CategoryMapper;
 import com.yellowrq.mapper.CategoryMapperCustom;
 import com.yellowrq.pojo.Category;
 import com.yellowrq.pojo.vo.CategoryVO;
+import com.yellowrq.pojo.vo.NewItemsVO;
 import com.yellowrq.service.CategroyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ClassName:CategroyServiceImpl
@@ -44,5 +47,13 @@ public class CategroyServiceImpl implements CategroyService {
     @Override
     public List<CategoryVO> getSubCatList(Integer rootCatId) {
         return categoryMapperCustom.getSubCatList(rootCatId);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public List<NewItemsVO> getSixNewItemLazy(Integer rootCatId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("rootCatId", rootCatId);
+        return categoryMapperCustom.getSixNewItemLazy(map);
     }
 }
