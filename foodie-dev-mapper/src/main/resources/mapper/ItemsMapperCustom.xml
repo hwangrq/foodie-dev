@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yellowrq.mapper.ItemsMapperCustom" >
+  <select id="queryItemComments" parameterType="Map" resultType="com.yellowrq.pojo.vo.ItemCommentVO">
+    select
+      ic.comment_level as commentLevel,
+      ic.content as content,
+      ic.sepc_name as sepcName,
+      ic.created_time as createdTime,
+      u.face as userFace,
+      u.nickname as nickname
+      from items_comments ic
+    left join users u on u.id = ic.user_id
+    where ic.item_id = #{paramsMap.itemId}
+    <if test="paramsMap.level != null and paramsMap.level != ''">
+      and ic.comment_level = #{paramsMap.level}
+    </if>
+  </select>
+</mapper>
