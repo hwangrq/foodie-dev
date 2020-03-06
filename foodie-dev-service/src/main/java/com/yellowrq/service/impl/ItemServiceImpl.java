@@ -7,6 +7,8 @@ import com.yellowrq.mapper.*;
 import com.yellowrq.pojo.*;
 import com.yellowrq.pojo.vo.CommentLevelCountsVO;
 import com.yellowrq.pojo.vo.ItemCommentVO;
+import com.yellowrq.pojo.vo.SearchItemsVO;
+import com.yellowrq.pojo.vo.ShopcartVO;
 import com.yellowrq.service.ItemService;
 import com.yellowrq.utils.DesensitizationUtil;
 import com.yellowrq.utils.PagedGridResult;
@@ -16,9 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ClassName:ItemServiceImpl
@@ -125,7 +125,38 @@ public class ItemServiceImpl implements ItemService {
         return setterPagedGrid(page, voList);
     }
 
-    private PagedGridResult setterPagedGrid(Integer page, List<ItemCommentVO> voList) {
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public PagedGridResult searchItems(String keywords, String sort, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("keywords", keywords);
+        map.put("sort", sort);
+        PageHelper.startPage(page, pageSize);
+        List<SearchItemsVO> voList = itemsMapperCustom.searchItems(map);
+        return setterPagedGrid(page, voList);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public PagedGridResult searchItemsByThirdCat(Integer catId, String sort, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("catId", catId);
+        map.put("sort", sort);
+        PageHelper.startPage(page, pageSize);
+        List<SearchItemsVO> voList = itemsMapperCustom.searchItemsByThirdCat(map);
+        return setterPagedGrid(page, voList);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public List<ShopcartVO> queryItemsBySpecIds(String specIds) {
+        String ids[] = specIds.split(",");
+        List<String> specIdsList = new ArrayList<>();
+        Collections.addAll(specIdsList, ids);
+        return itemsMapperCustom.queryItemsBySpecIds(specIdsList);
+    }
+
+    private PagedGridResult setterPagedGrid(Integer page, List<?> voList) {
         PageInfo<?> pageList = new PageInfo<>(voList);
         PagedGridResult grid = new PagedGridResult();
         grid.setPage(page);
