@@ -10,7 +10,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * ClassName:Application
  * Package:com.yellowrq
  * Description:
- *
+ *  springboot
  * @author:yellowrq
  * @date: 2020/1/13 14:48
  */

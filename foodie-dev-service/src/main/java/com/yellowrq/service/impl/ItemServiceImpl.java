@@ -3,6 +3,7 @@ package com.yellowrq.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yellowrq.enums.CommentLevel;
+import com.yellowrq.enums.YesOrNo;
 import com.yellowrq.mapper.*;
 import com.yellowrq.pojo.*;
 import com.yellowrq.pojo.vo.CommentLevelCountsVO;
@@ -156,6 +157,43 @@ public class ItemServiceImpl implements ItemService {
         return itemsMapperCustom.queryItemsBySpecIds(specIdsList);
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public ItemsSpec queryItemSpecById(String itemSpecIds) {
+        return itemsSpecMapper.selectByPrimaryKey(itemSpecIds);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public String queryItemsMainImgById(String itemId) {
+        ItemsImg itemsImg = new ItemsImg();
+        itemsImg.setItemId(itemId);
+        itemsImg.setIsMain(YesOrNo.Yes.type);
+        ItemsImg result = itemsImgMapper.selectOne(itemsImg);
+        return result != null ? result.getUrl() : "";
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void decreaseItemSpecStock(String itemSpecId, int buyCounts) {
+        // synchronized 不推荐使用，集群下无用，性能低下
+        // 锁数据库：不推荐，导致数据库性能低下
+        // 分布式锁 zookeeper redis
+
+        // lockUtil.getLock(); -- 加锁
+        //1.查询库存
+//        int stock = 2 ;
+        //2.判断库存是否<0
+//        if (stock - buyCounts < 0) {
+//
+//        }
+        int result = itemsMapperCustom.decreaseItemSpecStock(itemSpecId, buyCounts);
+        if (result != 1) {
+            throw new RuntimeException("订单创建失败，原因：库存不足");
+        }
+        // lockUtil.unLock(); -- 解锁
+    }
+
     private PagedGridResult setterPagedGrid(Integer page, List<?> voList) {
         PageInfo<?> pageList = new PageInfo<>(voList);
         PagedGridResult grid = new PagedGridResult();
@@ -165,5 +203,6 @@ public class ItemServiceImpl implements ItemService {
         grid.setRecords(pageList.getTotal());
         return grid;
     }
+
 
 }

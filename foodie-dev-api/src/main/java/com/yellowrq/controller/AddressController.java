@@ -54,7 +54,7 @@ public class AddressController {
     @PostMapping("/add")
     public JSONResult add(
             @ApiParam(name = "addressBO", value = "用户地址BO", required = true)
-            @RequestParam AddressBO addressBO) {
+            @RequestBody AddressBO addressBO) {
         JSONResult checkRes = checkAddress(addressBO);
         if (checkRes.getStatus() != 200){
             return checkRes;
@@ -63,7 +63,50 @@ public class AddressController {
         return JSONResult.ok();
     }
 
-    private JSONResult checkAddress(@RequestParam @ApiParam(name = "addressBO", value = "用户地址BO") AddressBO addressBO) {
+    @ApiOperation(value = "更新地址", notes = "更新收货地址", httpMethod = "POST")
+    @PostMapping("/update")
+    public JSONResult update(
+            @ApiParam(name = "addressBO", value = "用户地址BO", required = true)
+            @RequestBody AddressBO addressBO){
+        if (addressBO.getAddressId() == null) {
+            return JSONResult.errorMsg("修改地址错误：addresId不能为空");
+        }
+        JSONResult checkRes = checkAddress(addressBO);
+        if (checkRes.getStatus() != 200) {
+            return  checkRes;
+        }
+        addressService.updateUserAddress(addressBO);
+        return JSONResult.ok();
+    }
+
+    @ApiOperation(value = "删除用户地址", notes = "删除用户地址", httpMethod = "POST")
+    @PostMapping("/delete")
+    public JSONResult delete(
+            @ApiParam(name = "userId", value = "用户ID", required = true)
+            @RequestParam String userId,
+            @ApiParam(name = "addressId", value = "地址ID", required = true)
+            @RequestParam String addressId){
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(addressId)){
+            return JSONResult.errorMsg("");
+        }
+        addressService.deleteUserAddress(userId, addressId);
+        return JSONResult.ok();
+    }
+
+    @ApiOperation(value = "设置默认地址", notes = "设置默认地址", httpMethod = "POST")
+    @PostMapping("/setDefalut")
+    public JSONResult setDefalut(
+            @ApiParam(name = "userId", value = "用户ID", required = true)
+            @RequestParam String userId,
+            @ApiParam(name = "addressId", value = "地址ID", required = true)
+            @RequestParam String addressId){
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(addressId)){
+            return JSONResult.errorMsg("");
+        }
+        addressService.updateUserAddressToBeDefault(userId, addressId);
+        return JSONResult.ok();
+    }
+    private JSONResult checkAddress(AddressBO addressBO) {
         String receiver = addressBO.getReceiver();
         if (StringUtils.isBlank(receiver)){
             return JSONResult.errorMsg("收货人不能为空");
