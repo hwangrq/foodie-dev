@@ -20,7 +20,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 // 扫描所有包以及相关组件包
 @ComponentScan(basePackages = {"com.yellowrq", "org.n3r.idworker"})
 //@EnableTransactionManagement
-//@EnableScheduling       // 开启定时任务
+@EnableScheduling       // 开启定时任务
 public class Application {
 
     public static void main(String[] args) {

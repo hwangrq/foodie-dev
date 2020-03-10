@@ -1,6 +1,8 @@
 package com.yellowrq.service;
 
 import com.yellowrq.bo.SubmitOrderBO;
+import com.yellowrq.pojo.OrderStatus;
+import com.yellowrq.pojo.vo.OrderVO;
 
 /**
  * ClassName:OrderService
@@ -17,7 +19,25 @@ public interface OrderService {
      * @param submitOrderBO
      * @return
      */
-    public String createOrder(SubmitOrderBO submitOrderBO);
+    public OrderVO createOrder(SubmitOrderBO submitOrderBO);
 
 
+    /**
+     * 修改订单状态
+     * @param orderId
+     * @param orderStatus
+     */
+    public void updateOrderStatus(String orderId, Integer orderStatus);
+
+    /**
+     * 查询订单状态
+     * @param orderId
+     * @return
+     */
+    public OrderStatus queryOrderStatusInfo(String orderId);
+
+    /**
+     * 关闭超时未支付订单
+     */
+    public void closeOrder();
 }
