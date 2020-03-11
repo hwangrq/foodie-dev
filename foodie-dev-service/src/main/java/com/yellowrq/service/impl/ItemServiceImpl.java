@@ -11,6 +11,7 @@ import com.yellowrq.pojo.vo.ItemCommentVO;
 import com.yellowrq.pojo.vo.SearchItemsVO;
 import com.yellowrq.pojo.vo.ShopcartVO;
 import com.yellowrq.service.ItemService;
+import com.yellowrq.service.impl.center.BaseService;
 import com.yellowrq.utils.DesensitizationUtil;
 import com.yellowrq.utils.PagedGridResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ import java.util.*;
  * @date: 2020/2/27 13:14
  */
 @Service
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceImpl extends BaseService implements ItemService {
 
     @Autowired
     private ItemsMapper itemsMapper;
@@ -123,7 +124,7 @@ public class ItemServiceImpl implements ItemService {
         for (ItemCommentVO vo : voList) {
             vo.setNickname(DesensitizationUtil.commonDisplay(vo.getNickname()));
         }
-        return setterPagedGrid(page, voList);
+        return setterPagedGrid(voList, page);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -134,7 +135,7 @@ public class ItemServiceImpl implements ItemService {
         map.put("sort", sort);
         PageHelper.startPage(page, pageSize);
         List<SearchItemsVO> voList = itemsMapperCustom.searchItems(map);
-        return setterPagedGrid(page, voList);
+        return setterPagedGrid(voList, page);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -145,7 +146,7 @@ public class ItemServiceImpl implements ItemService {
         map.put("sort", sort);
         PageHelper.startPage(page, pageSize);
         List<SearchItemsVO> voList = itemsMapperCustom.searchItemsByThirdCat(map);
-        return setterPagedGrid(page, voList);
+        return setterPagedGrid(voList, page);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -193,16 +194,5 @@ public class ItemServiceImpl implements ItemService {
         }
         // lockUtil.unLock(); -- 解锁
     }
-
-    private PagedGridResult setterPagedGrid(Integer page, List<?> voList) {
-        PageInfo<?> pageList = new PageInfo<>(voList);
-        PagedGridResult grid = new PagedGridResult();
-        grid.setPage(page);
-        grid.setRows(voList);
-        grid.setTotal(pageList.getPages());
-        grid.setRecords(pageList.getTotal());
-        return grid;
-    }
-
 
 }

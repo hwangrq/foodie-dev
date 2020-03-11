@@ -2,6 +2,8 @@ package com.yellowrq.controller;
 
 import org.springframework.stereotype.Controller;
 
+import java.io.File;
+
 /**
  * ClassName:BaseController
  * Package:com.yellowrq.controller
@@ -15,7 +17,7 @@ public class BaseController {
 
     public static final String FOODIE_SHOPCART = "shopcart";
 
-    public static final Integer COMMENT_PAGE_SIZE = 10;
+    public static final Integer COMMON_PAGE_SIZE = 10;
     public static final Integer PAGE_SIZE = 20;
 
     //支付中心的调用地址
@@ -26,5 +28,12 @@ public class BaseController {
     //                       |-->回调通知的url
 //    String payReturnUrl = "http://localhost:8088/orders/notifyMerchantOrderPaid";
     String payReturnUrl = "http://qm7is2.natappfree.cc/orders/notifyMerchantOrderPaid";
+
+    //用户上传头像的位置
+    public static final String IMAGE_USER_FACE_LOCATION = "D:"
+                                                        + File.separator +"workspaces"
+                                                        + File.separator +"image"
+                                                        + File.separator +"foodie"
+                                                        + File.separator +"faces";
 
 }
