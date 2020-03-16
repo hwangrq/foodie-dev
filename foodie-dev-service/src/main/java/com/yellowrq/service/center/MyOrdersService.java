@@ -1,7 +1,10 @@
 package com.yellowrq.service.center;
 
 import com.yellowrq.pojo.Orders;
+import com.yellowrq.pojo.vo.OrderStatusCountsVO;
 import com.yellowrq.utils.PagedGridResult;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface MyOrdersService {
 
@@ -52,7 +55,7 @@ public interface MyOrdersService {
      * 查询用户订单数
      * @param userId
      */
-//    public OrderStatusCountsVO getOrderStatusCounts(String userId);
+      public OrderStatusCountsVO getOrderStatusCounts(String userId);
 
     /**
      * 获得分页的订单动向
@@ -64,4 +67,5 @@ public interface MyOrdersService {
     public PagedGridResult getOrdersTrend(String userId,
                                           Integer page,
                                           Integer pageSize);
+
 }

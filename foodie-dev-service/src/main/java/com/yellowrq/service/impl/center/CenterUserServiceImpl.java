@@ -1,7 +1,10 @@
 package com.yellowrq.service.impl.center;
 
 import com.yellowrq.bo.center.CenterUserBO;
+import com.yellowrq.enums.OrderStatusEnum;
+import com.yellowrq.mapper.OrderStatusMapper;
 import com.yellowrq.mapper.UsersMapper;
+import com.yellowrq.pojo.OrderStatus;
 import com.yellowrq.pojo.Users;
 import com.yellowrq.service.center.CenterUserService;
 import org.n3r.idworker.Sid;
@@ -10,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+
 
 /**
  * ClassName:CenterUserServiceImpl
@@ -28,6 +33,8 @@ public class CenterUserServiceImpl implements CenterUserService {
     private UsersMapper usersMapper;
     @Autowired
     private Sid sid;
+    @Autowired
+    private OrderStatusMapper orderStatusMapper;
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
@@ -58,6 +65,5 @@ public class CenterUserServiceImpl implements CenterUserService {
         usersMapper.updateByPrimaryKeySelective(updateUser);
         return queryUserInfo(userId);
     }
-
 
 }

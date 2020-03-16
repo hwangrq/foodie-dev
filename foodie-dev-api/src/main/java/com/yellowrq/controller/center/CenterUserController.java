@@ -1,5 +1,6 @@
 package com.yellowrq.controller.center;
 
+import com.sun.org.apache.regexp.internal.RE;
 import com.yellowrq.bo.center.CenterUserBO;
 import com.yellowrq.controller.BaseController;
 import com.yellowrq.pojo.Users;
@@ -157,6 +158,8 @@ public class CenterUserController extends BaseController {
         // to后续要改,增加令牌token，会整合进redis，分布式会话
         return JSONResult.ok();
     }
+
+
 
     private Users setNullProperty(Users userResult){
         userResult.setCreatedTime(null);
