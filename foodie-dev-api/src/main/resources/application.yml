@@ -8,6 +8,8 @@ server:
   tomcat:
     uri-encoding: UTF-8
   max-http-header-size: 80KB
+#  servlet:
+#    context-path: /foodie
 
 ############################################################
 #
@@ -17,8 +19,8 @@ server:
 spring:
   datasource:                                           # 数据源的相关配置
     type: com.zaxxer.hikari.HikariDataSource          # 数据源类型：HikariCP
-    driver-class-name: com.mysql.jdbc.Driver          # mysql驱动
-    url: jdbc:mysql://localhost:3306/foodie?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+    driver-class-name: com.mysql.cj.jdbc.Driver          # mysql驱动
+    url: jdbc:mysql://localhost:3306/foodie?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8
     username: root
     password: root
     hikari:
@@ -34,6 +36,11 @@ spring:
     multipart:
       max-file-size: 512000     #文件上传大小限制为500kb
       max-request-size: 512000  #请求大小限制为500kb
+  redis:
+    database: 2
+    host: 49.233.17.153
+    port: 6379
+    password: 123qwe!@#
 ############################################################
 #
 # mybatis 配置

@@ -34,7 +34,7 @@ public class BaseController {
     //微信支付成功 -->支付中心 --> 本电商平台
     //                       |-->回调通知的url
 //    String payReturnUrl = "http://localhost:8088/orders/notifyMerchantOrderPaid";
-    String payReturnUrl = "http://e6xp2h.natappfree.cc/orders/notifyMerchantOrderPaid";
+    String payReturnUrl = "http://wuj6fx.natappfree.cc/orders/notifyMerchantOrderPaid";
 
     //用户上传头像的位置
     public static final String IMAGE_USER_FACE_LOCATION = "D:"

@@ -1,5 +1,6 @@
 package com.yellowrq.service.impl;
 
+import com.yellowrq.bo.ShopcartBO;
 import com.yellowrq.bo.SubmitOrderBO;
 import com.yellowrq.enums.OrderStatusEnum;
 import com.yellowrq.enums.YesOrNo;
@@ -9,6 +10,7 @@ import com.yellowrq.mapper.OrdersMapper;
 import com.yellowrq.pojo.*;
 import com.yellowrq.pojo.vo.MerchantOrdersVO;
 import com.yellowrq.pojo.vo.OrderVO;
+import com.yellowrq.pojo.vo.ShopcartVO;
 import com.yellowrq.service.AddressService;
 import com.yellowrq.service.ItemService;
 import com.yellowrq.service.OrderService;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public OrderVO createOrder(SubmitOrderBO submitOrderBO) {
+    public OrderVO createOrder(List<ShopcartBO> shopcartList, SubmitOrderBO submitOrderBO) {
         String userId = submitOrderBO.getUserId();
         String itemSpecIds = submitOrderBO.getItemSpecIds();
         String addressId = submitOrderBO.getAddressId();
@@ -56,8 +59,11 @@ public class OrderServiceImpl implements OrderService {
         String leftMsg = submitOrderBO.getLeftMsg();
         //包邮费用设置为0
         Integer postAmount = 0;
+
         String orderId = sid.nextShort();
+
         UserAddress address = addressService.queryUserAddress(userId, addressId);
+
         //1.新订单数据保存
         Orders newOrder = new Orders();
         newOrder.setId(orderId);
@@ -71,8 +77,10 @@ public class OrderServiceImpl implements OrderService {
 //        newOrder.setTotalAmount();
 //        newOrder.setRealPayAmount();
         newOrder.setPostAmount(postAmount);
+
         newOrder.setPayMethod(payMethod);
         newOrder.setLeftMsg(leftMsg);
+
         newOrder.setIsComment(YesOrNo.NO.type);
         newOrder.setIsDelete(YesOrNo.NO.type);
         newOrder.setCreatedTime(new Date());
@@ -82,9 +90,14 @@ public class OrderServiceImpl implements OrderService {
         String[] itemSpecIdArr = itemSpecIds.split(",");
         Integer totalAmount = 0;    //商品原价累计
         Integer realPayAmount = 0;  //优惠后的实际支付的价格累计
+
+        List<ShopcartBO> toBeRemovedShopcartList = new ArrayList<>();
         for (String itemSpecId : itemSpecIdArr) {
+            ShopcartBO cartItem = getBuyCountsFromShopcart(shopcartList, itemSpecId);
             // 整合redis后，商品购买的数量重新从redis的购物车中获取
-            int buyCounts = 1;
+            int buyCounts = cartItem.getBuyCounts();
+            toBeRemovedShopcartList.add(cartItem);
+
             //2.1 根据规格id，查询规格的具体信息，主要获取价格
             ItemsSpec itemSpec = itemService.queryItemSpecById(itemSpecId);
             totalAmount += itemSpec.getPriceNormal() * buyCounts;
@@ -134,6 +147,7 @@ public class OrderServiceImpl implements OrderService {
         OrderVO orderVO = new OrderVO();
         orderVO.setOrderId(orderId);
         orderVO.setMerchantOrdersVO(merchantOrdersVO);
+        orderVO.setToBeRemoveShopcartList(toBeRemovedShopcartList);
         return orderVO;
     }
 
@@ -145,6 +159,21 @@ public class OrderServiceImpl implements OrderService {
         paidStatus.setOrderStatus(orderStatus);
         paidStatus.setPayTime(new Date());
         orderStatusMapper.updateByPrimaryKeySelective(paidStatus);
+    }
+
+    /**
+     * 从redis中的购物车里获取商品，目的：counts
+     * @param shopcartBOList
+     * @param specId
+     * @return
+     */
+    private ShopcartBO getBuyCountsFromShopcart(List<ShopcartBO> shopcartBOList, String specId) {
+        for (ShopcartBO shopcartBO : shopcartBOList) {
+            if (shopcartBO.getSpecId().equals(specId)) {
+                return shopcartBO;
+            }
+        }
+        return null;
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)

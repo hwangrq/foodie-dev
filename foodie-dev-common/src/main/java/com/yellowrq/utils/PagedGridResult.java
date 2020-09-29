@@ -2,12 +2,14 @@ package com.yellowrq.utils;
 
 import java.util.List;
 
+
 /**
- * 
- * @Title: PagedGridResult.java
- * @Package com.imooc.utils
- * @Description: 用来返回分页Grid的数据格式
- * Copyright: Copyright (c) 2019
+ * ClassName:MD5Util
+ * Package:com.yellowrq.utils
+ * Description:
+ *  用来返回分页Grid的数据格式
+ * @author:yellowrq
+ * @date: 2020/9/22 10:16
  */
 public class PagedGridResult {
 	

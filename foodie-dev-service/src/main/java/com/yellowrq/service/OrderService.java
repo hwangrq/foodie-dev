@@ -1,8 +1,11 @@
 package com.yellowrq.service;
 
+import com.yellowrq.bo.ShopcartBO;
 import com.yellowrq.bo.SubmitOrderBO;
 import com.yellowrq.pojo.OrderStatus;
 import com.yellowrq.pojo.vo.OrderVO;
+
+import java.util.List;
 
 /**
  * ClassName:OrderService
@@ -16,10 +19,11 @@ public interface OrderService {
 
     /**
      * 用于创建订单相关信息
+     * @param shopcartList
      * @param submitOrderBO
      * @return
      */
-    public OrderVO createOrder(SubmitOrderBO submitOrderBO);
+    public OrderVO createOrder(List<ShopcartBO> shopcartList, SubmitOrderBO submitOrderBO);
 
 
     /**

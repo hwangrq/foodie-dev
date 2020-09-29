@@ -11,7 +11,7 @@ import org.springframework.web.filter.CorsFilter;
  * Package:com.yellowrq.conifg
  * Description:
  *  跨域请求
- * @author:yellowrq
+ * @author: yellowrq
  * @date: 2020/2/24 14:20
  */
 @Configuration
